@@ -29,20 +29,60 @@ module Enumerable
 
   def my_count 
     count = 0
+    
   
     self.my_each do |item|
-      if block_given?
-        count += 1
+      if block_given? 
+        if yield(item)
+          count += 1
+        end
       else 
-        count += 1
+          count += 1
       end
     end
   
     count 
   end
+
+  def my_each_with_index
+    index = 0
   
-   
+    self.my_each do |item|
+      yield(item, index) if block_given?
+      index += 1
+    end
+  
+    self
+  end
+  
+  def my_inject(starting_value)
+      total = starting_value
+    
+      self.my_each do |item|
+        total = yield(total, item)
+      end
+    
+      total
+  end
+
+  def my_map
+    result = []
+  
+    self.my_each do |item|
+      result << yield(item)
+    end
+  
+    result
+  end
+
+  def my_none?
+    self.my_each do |item|
+      return false if yield(item)  # If any item passes, return false immediately
+    end
+    true  # If none passed, return true at the end
+  end
 end
+
 
 class Array
   
